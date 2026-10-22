@@ -1,4 +1,4 @@
-package com.Vedant.EduSphere;
+package com.Vedant.EduSphere.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
