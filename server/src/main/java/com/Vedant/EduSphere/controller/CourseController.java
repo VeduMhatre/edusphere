@@ -27,8 +27,11 @@ public class CourseController {
 		return service.getCourse();
 	}	
 
-	@PutMapping("/update")
-	public String updateCourse(@RequestBody Course c){
+	@PutMapping({"/update","/update/{id}"})
+	public String updateCourse(@PathVariable(required=false) Long id, @RequestBody Course c){
+		if (id != null) {
+        		c.setId(id);
+    		}
 		return service.updateCourse(c); 
 	}
 	

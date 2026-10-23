@@ -17,8 +17,8 @@ public class CourseService {
 	public String addCourse(Course c){
 		String msg ="";
 		
-		if(c.getId() != null && repo.existsById(c.getId())){
-			msg = c.getId() + "Already Exists";
+		if(c.getId() != null){
+			return "Error: Do not provide an ID when creating a new course!";
 		}
 		else{
 			try{
@@ -38,24 +38,34 @@ public class CourseService {
 
 	public String updateCourse(Course c){
 		String msg ="";
-		try{
-			repo.save(c);
-			msg = "Record Update";
+		if(c.getId() == null || !repo.existsById(c.getId())){
+			msg = "Course Id " + (c.getId() == null ? "not provided" : c.getId() + " does not exist");  
 		}
-		catch(Exception e){
-			msg = "Update Issue" + e;
+		else{
+			try{
+				repo.save(c);
+				msg = "Record Updated";
+			}
+			catch(Exception e){
+				msg = "Update Issue" + e;
+			}
 		}
 		return msg;
 	}
 
 	public String deleteCourse(Long id){
 		String msg="";
-		try{
-			repo.deleteById(id);
-			msg = "Record Deleted";
+		if(id == null || !repo.existsById(id)){
+			msg = "Course Id " + (id == null ? "not provided" : id + " does not exist");
 		}
-		catch(Exception e){
-			msg ="Delete Issue";
+		else{
+			try{
+				repo.deleteById(id);
+				msg = "Record Deleted";
+			}
+			catch(Exception e){
+				msg ="Delete Issue";
+			}
 		}
 		return msg;
 	}
