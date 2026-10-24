@@ -2,6 +2,7 @@ package com.Vedant.EduSphere.service;
 
 import com.Vedant.EduSphere.entity.Course;
 import com.Vedant.EduSphere.repository.CourseRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -17,17 +18,22 @@ public class CourseService {
 	public String addCourse(Course c){
 		String msg ="";
 		
+		if(repo.existsByCourseCode(c.getCourseCode())){
+			return "Error: Course code '" + c.getCourseCode() + "' already exists!";
+		}
+		
 		if(c.getId() != null){
 			return "Error: Do not provide an ID when creating a new course!";
 		}
-		else{
-			try{
-				repo.save(c);
-				msg = "Record Created";
-			}
-			catch(Exception e){
-				msg = "Create Issue" + e;
-			}
+		try{
+			repo.save(c);
+			msg = "Record Created";
+		}
+		catch(DataIntegrityViolationException e){
+			return "Error: Database constraint violation. Course code must be unique.";
+		}
+		catch(Exception e){
+			msg = "Create Issue: " + e.getMessage();
 		}
 		return msg;
 	}
@@ -39,16 +45,17 @@ public class CourseService {
 	public String updateCourse(Course c){
 		String msg ="";
 		if(c.getId() == null || !repo.existsById(c.getId())){
-			msg = "Course Id " + (c.getId() == null ? "not provided" : c.getId() + " does not exist");  
+			return "Course Id " + (c.getId() == null ? "not provided" : c.getId() + " does not exist");  
 		}
-		else{
-			try{
-				repo.save(c);
-				msg = "Record Updated";
-			}
-			catch(Exception e){
-				msg = "Update Issue" + e;
-			}
+		try{
+			repo.save(c);
+			msg = "Record Updated";
+		}
+		catch(DataIntegrityViolationException e){
+			return "Error: Database constraint violation. Course code must be unique.";
+		}
+		catch(Exception e){
+			msg = "Update Issue: " + e.getMessage();
 		}
 		return msg;
 	}
@@ -68,7 +75,5 @@ public class CourseService {
 			}
 		}
 		return msg;
-	}
-	
-
+	}	
 }

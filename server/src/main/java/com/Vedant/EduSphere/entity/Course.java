@@ -11,7 +11,10 @@ public class Course {
 	private Long id;
 
 	private String courseName;
+
+	@Column(unique = true)
 	private String courseCode;
+
 	private String courseInstructor;
 	private Integer duration;
 	private BigDecimal fees;
